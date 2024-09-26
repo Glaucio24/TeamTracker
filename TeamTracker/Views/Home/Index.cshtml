@@ -1,8 +1,119 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model TeamTracker.ModelView.Dashboard
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<main class="content" id="mainHero">
+    <section class="container h-100 sideNav">
+        <div class="row">
+            
+            <!-- Total Employees, Departments, and Locations Cards -->
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header">Total Employees</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.TotalEmployees</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header">Total Departments</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.TotalDepartments</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-header">Total Locations</div>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.TotalLocations</h5>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h3>Employees per Department</h3>
+                <canvas id="employeesByDepartmentChart" width="400" height="200"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h3>Employees per Location</h3>
+                <canvas id="employeesByLocationChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.onload = function () {
+            // Get the data from the model
+            var departmentLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DepartmentNames));
+            var departmentData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.EmployeesPerDepartment));
+            var locationLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.LocationNames));
+            var locationData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.EmployeesPerLocation));
+
+            // Employees per Department Chart
+            var ctxDepartment = document.getElementById('employeesByDepartmentChart').getContext('2d');
+            var employeesByDepartmentChart = new Chart(ctxDepartment, {
+                type: 'bar',
+                data: {
+                    labels: departmentLabels,
+                    datasets: [{
+                        label: 'Employees',
+                        data: departmentData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Employees'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Employees per Location Chart
+            var ctxLocation = document.getElementById('employeesByLocationChart').getContext('2d');
+            var employeesByLocationChart = new Chart(ctxLocation, {
+                type: 'bar',
+                data: {
+                    labels: locationLabels,
+                    datasets: [{
+                        label: 'Employees',
+                        data: locationData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Employees'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</main>

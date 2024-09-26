@@ -6,7 +6,7 @@ using TeamTracker.Models;
 
 namespace TeamTracker.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,6 +18,9 @@ namespace TeamTracker.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Call the base OnModelCreating to apply Identity configurations
+            base.OnModelCreating(modelBuilder);
+
             // Configure the many-to-many relationships
             modelBuilder.Entity<Employee>()
                 .HasMany(e => e.Locations)

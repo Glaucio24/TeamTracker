@@ -1,0 +1,99 @@
+﻿@model IEnumerable<TeamTracker.Models.Employee>
+@using TeamTracker.Services.Interfaces;
+@inject IImageService ImageService;
+
+@{
+    ViewData["Title"] = "Employees Index";
+}
+
+<h1>Employees</h1>
+
+<div class="row mb-3">
+    <div class="col-12 text-end">
+        <a class="btn btn-primary rounded-pill" asp-action="Create">Create New</a>
+    </div>
+</div>
+
+<div class="row g-2 ">
+    <div class="col-12 col-md-4 sideNav">
+        <form asp-action="searchEmployees" asp-controller="Employees">
+            <div class="input-group">
+                <input class="form-control" type="search" name="SearchString"
+                       placeholder="Search Term" />
+                <input type="submit" class="btn btn-outline-primary" value="Search" />
+            </div>
+        </form>
+        <form asp-action="Index" asp-controller="Employees">
+            <div class="mt-5">
+                <label class="form-label fw-bold">EMPLOYEES FILTER</label>
+                <select name="EmployeesId" asp-items="@ViewBag.EmployeesId" class="form-control"
+                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
+                    <option>All Employees</option>
+                </select>
+
+            </div>
+        </form>
+
+        <form asp-action="Index" asp-controller="Departments">
+            <div class="mt-5">
+                <label class="form-label fw-bold">DEPARTMENTS FILTER</label>
+                <select name=DepartmentsId" asp-items="@ViewBag.EmployeesId" class="form-control"
+                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
+                    <option>All Departments</option>
+                </select>
+
+            </div>
+        </form>
+        <form asp-action="Index" asp-controller="Locations">
+            <div class="mt-5">
+                <label class="form-label fw-bold">LOCATIONS FILTER</label>
+                <select name="LocationsId" asp-items="@ViewBag.LocationsId" class="form-control"
+                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
+                    <option>All Locations</option>
+                </select>
+
+            </div>
+        </form>
+    </div> 
+
+<div class="col-12 col-md-8">
+    <div class="row row-cols-1 g-3">
+        @foreach (var employee in Model)
+        {
+            <div class="col">
+                <div class="card mb-3 rounded-pill">
+                    <div class="row g-0">
+                        <div class="col-md-4 square-img-container">
+                            <img src='@ImageService.ConvertByteArrayToFile(employee.ImageData!, employee.ImageType!)' class="square-img rounded-start">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <strong>Name: </strong>@Html.DisplayFor(modelItem => employee.FullName)
+                                </p>
+                                <p class="card-text">
+                                    <strong>Email:</strong> @Html.DisplayFor(modelItem => employee.Email)
+                                </p>
+                                <p class="card-text">
+                                    <strong>Phone Number:</strong> @Html.DisplayFor(modelItem => employee.PhoneNumber)
+                                </p>
+                                <p class="card-text">
+                                    <strong>Hired Date:</strong> @Html.DisplayFor(modelItem => employee.HireDate)
+                                </p>
+                                <p class="card-text">
+                                    <strong>Employment Status:</strong> @Html.DisplayFor(modelItem => employee.Status)
+                                </p>
+                              
+                                <div class="fs-2 mt-4">                       
+                                    <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@employee.Id"><i class="bi bi-pencil-fill"></i></a>
+                                    <a class="me-3 editIcons" asp-action="#"><i class="bi bi-envelope-fill "></i></a>
+                                    <a class="me-3 editIcons text-danger" asp-action="Delete" asp-route-id="@employee.Id"><i class="bi bi-trash-fill"></i></a>                                                                      
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div> 

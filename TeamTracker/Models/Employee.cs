@@ -24,10 +24,18 @@ namespace TeamTracker.Models
 
         public EmploymentStatus Status { get; set; } // For tracking employement status
 
-        public DateTime HireDate { get; set; }
+        [Display(Name = "Hired Date")]
+        public DateTime HireDate { get; set; } = DateTime.Now;
+
+        public byte[]? ImageData { get; set; }
+
+        public string? ImageType { get; set; }
+
 
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}"; // This property will not be mapped to the database
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
 
         // Navigation Properties for Many-to-Many Relationships
         public virtual ICollection<Location> Locations { get; set; } = new HashSet<Location>();

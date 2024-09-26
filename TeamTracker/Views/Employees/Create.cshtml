@@ -1,0 +1,89 @@
+﻿@model TeamTracker.Models.Employee
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<div class="p-3 border border-2 shadow-lg sideNav">
+
+    <form asp-action="Create" asp-controller="Employees" enctype="multipart/form-data">
+        <div class="row g-3 p-2">
+            <div class="col-12 col-lg-4">
+                <div class="square-img-container">
+                    <img id="ClassImage" class="square-img" src="~/img/DefaultContactImage.png">
+                </div>
+                <div>
+                    <label asp-for="ImageFile" class="form-label"></label>
+                    <input asp-for="ImageFile" class="form-control" accept=".png,.jpg,.jpeg,.gif" onchange="document.getElementById('ClassImage').src=window.URL.createObjectURL(this.files[0])" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <textarea asp-for="Email" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber" class="control-label"></label>
+                        <textarea asp-for="PhoneNumber" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <textarea asp-for="Status" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12 col-lg-6 mt-3">
+                        <label asp-for="Locations" class="control-label"></label>
+                        <select name="locationIds" class="form-control" asp-items="ViewBag.LocationList" multiple></select>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-3">
+                        <label asp-for="Departments" class="control-label"></label>
+                        <select name="departmentIds" class="form-control" asp-items="ViewBag.DepartmentList" multiple></select>
+                    </div>
+
+                    <div class="form-group mt-3 text-lg-end">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+
+<!--Add option to view next page in case of a lot oof empployees
+    departement specification in the card and fix the moodel as well
+    role and access crud
+    figure out nav bar on te left side
+    Add grid with pictures on locations
+    
+-->
