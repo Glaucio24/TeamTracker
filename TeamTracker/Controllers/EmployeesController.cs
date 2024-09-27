@@ -145,10 +145,28 @@ namespace TeamTracker.Controllers
 
             if (ModelState.IsValid)
             {
+                // Handle image upload
                 if (employee.ImageFile != null)
                 {
+                    // Convert file to byte array (if needed for storage in the database)
                     employee.ImageData = await _imageService.ConvertFileToByteArrayAsync(employee.ImageFile);
                     employee.ImageType = employee.ImageFile.ContentType;
+
+                    // Store image file and save the path
+                    var fileName = Path.GetFileName(employee.ImageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
+
+                    // Ensure the directory exists
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                    // Save the file to the specified path
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await employee.ImageFile.CopyToAsync(stream);
+                    }
+
+                    // Set the ImagePath property (relative to wwwroot)
+                    employee.ImagePath = "/img/" + fileName;
                 }
 
                 // Associate selected locations
@@ -182,34 +200,34 @@ namespace TeamTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Populate ViewBag for locations and departments in case of failure
             ViewBag.LocationList = new SelectList(_context.Locations, "Id", "Name");
             ViewBag.DepartmentList = new SelectList(_context.Departments, "Id", "Name");
             return View(employee);
         }
 
 
-        // GET: Employees1/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
+        // GET: Employees/Edit
+        public async Task<IActionResult> Edit(int id)
+        {
             var employee = await _context.Employees.FindAsync(id);
             if (employee == null)
             {
                 return NotFound();
             }
+
+            // Populate ViewBag for locations and departments
+            ViewBag.LocationList = new SelectList(_context.Locations, "Id", "Name", employee.Locations.Select(l => l.Id));
+            ViewBag.DepartmentList = new SelectList(_context.Departments, "Id", "Name", employee.Departments.Select(d => d.Id));
+
             return View(employee);
         }
 
-        // POST: Employees1/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Employees/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Status,HireDate,ImageData,ImageType")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Status,HireDate,ImageData,ImageType,ImageFile")] Employee employee, int[] locationIds, int[] departmentIds)
         {
             if (id != employee.Id)
             {
@@ -220,8 +238,60 @@ namespace TeamTracker.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    var existingEmployee = await _context.Employees
+                        .Include(e => e.Locations) // Include locations if necessary
+                        .Include(e => e.Departments) // Include departments if necessary
+                        .FirstOrDefaultAsync(e => e.Id == id);
+
+                    if (existingEmployee != null)
+                    {
+                        // Update properties
+                        existingEmployee.FirstName = employee.FirstName;
+                        existingEmployee.LastName = employee.LastName;
+                        existingEmployee.Email = employee.Email;
+                        existingEmployee.PhoneNumber = employee.PhoneNumber;
+                        existingEmployee.Status = employee.Status;
+
+                        // Update the image only if a new one is provided
+                        if (employee.ImageFile != null)
+                        {
+                            existingEmployee.ImageData = await _imageService.ConvertFileToByteArrayAsync(employee.ImageFile);
+                            existingEmployee.ImageType = employee.ImageFile.ContentType;
+                        }
+
+                        // Clear existing associations
+                        existingEmployee.Locations.Clear();
+                        existingEmployee.Departments.Clear();
+
+                        // Associate new locations
+                        if (locationIds != null)
+                        {
+                            foreach (var locationId in locationIds)
+                            {
+                                var location = await _context.Locations.FindAsync(locationId);
+                                if (location != null)
+                                {
+                                    existingEmployee.Locations.Add(location);
+                                }
+                            }
+                        }
+
+                        // Associate new departments
+                        if (departmentIds != null)
+                        {
+                            foreach (var departmentId in departmentIds)
+                            {
+                                var department = await _context.Departments.FindAsync(departmentId);
+                                if (department != null)
+                                {
+                                    existingEmployee.Departments.Add(department);
+                                }
+                            }
+                        }
+
+                        // Save changes
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -236,6 +306,9 @@ namespace TeamTracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.LocationList = new SelectList(_context.Locations, "Id", "Name");
+            ViewBag.DepartmentList = new SelectList(_context.Departments, "Id", "Name");
             return View(employee);
         }
 

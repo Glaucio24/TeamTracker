@@ -61,7 +61,7 @@ namespace TeamTracker.Controllers
 
 
 
-        public IActionResult Privacy()
+        public IActionResult Statistics()
         {
             return View();
         }

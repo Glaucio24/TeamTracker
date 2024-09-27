@@ -4,32 +4,44 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>See All Departments</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-12 text-end mb-2">
+        <a class="btn btn-primary rounded-pill" asp-action="Create">Create New</a>
+    </div>
+</div>
+<div class="row g-2 ">
+    <div class="col-12 col-md-8 ">
+        <div class="row row-cols-1 g-3">
+            @foreach (var department in Model)
+            {
+                <div class="col">
+                    <div class="card mb-3 rounded-pill">
+                        <div class="row g-0">
+                            <div class="col-md-4 square-img-container">
+                                <img src="/img/TT.png" class="square-img rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <span class="fw-bold heroTitle2 me-2">@Html.DisplayFor(modelItem => department.Name) </span>
+                                    <div class="card-text">
+                                        <span class="fw-bold me-2">Fitness Goal:</span>@Html.DisplayFor(modelItem => department.Name)
+                                    </div>
+
+                                    <div class="fs-2 mt-5 ">
+                                        <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@department.Id"><i class="bi bi-pencil-fill "></i></a>
+                        
+                                        <a class="me-3 editIcons" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash-fill text-danger "></i></a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

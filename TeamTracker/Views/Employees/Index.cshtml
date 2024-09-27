@@ -15,7 +15,7 @@
 </div>
 
 <div class="row g-2 ">
-    <div class="col-12 col-md-4 sideNav">
+    <div class="col-12 col-md-4 shadow-lg sideNav">
         <form asp-action="searchEmployees" asp-controller="Employees">
             <div class="input-group">
                 <input class="form-control" type="search" name="SearchString"
@@ -54,14 +54,14 @@
 
             </div>
         </form>
-    </div> 
+    </div>
 
-<div class="col-12 col-md-8">
-    <div class="row row-cols-1 g-3">
+    <div class="col-12 col-md-8 ">
+        <div class="row row-cols-1 g-3 shadow-lg">
         @foreach (var employee in Model)
         {
             <div class="col">
-                <div class="card mb-3 rounded-pill">
+                    <div class="card mb-3 rounded-pill navShadow ">
                     <div class="row g-0">
                         <div class="col-md-4 square-img-container">
                             <img src='@ImageService.ConvertByteArrayToFile(employee.ImageData!, employee.ImageType!)' class="square-img rounded-start">

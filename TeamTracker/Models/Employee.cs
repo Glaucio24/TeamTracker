@@ -31,6 +31,7 @@ namespace TeamTracker.Models
 
         public string? ImageType { get; set; }
 
+        public string? ImagePath { get; set; }
 
         [NotMapped]
         public string FullName => $"{FirstName} {LastName}"; // This property will not be mapped to the database
