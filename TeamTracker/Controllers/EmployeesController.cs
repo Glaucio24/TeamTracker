@@ -29,7 +29,7 @@ namespace TeamTracker.Controllers
 
         // GET: Employees
         [Authorize]
-        public async Task<IActionResult> Index(int? EmployeesId, string searchString)
+        public async Task<IActionResult> Index(int? EmployeesId, string searchString, int page = 1, int pageSize = 3)
         {
             // Initialize the employee query
             var employees = _context.Employees.AsQueryable();
@@ -38,7 +38,7 @@ namespace TeamTracker.Controllers
             if (!string.IsNullOrEmpty(searchString))
             {
                 employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString.ToLower()) ||
-                                                 e.LastName.ToLower().Contains(searchString.ToLower()));
+                                                  e.LastName.ToLower().Contains(searchString.ToLower()));
             }
 
             // Handle filter by specific employee from the dropdown
@@ -47,12 +47,34 @@ namespace TeamTracker.Controllers
                 employees = employees.Where(e => e.Id == EmployeesId);
             }
 
+            // Order employees by FullName (or FirstName and LastName separately)
+            employees = employees.OrderBy(e => e.FirstName).ThenBy(e => e.LastName);
+
+            // Get the total number of employees after filtering
+            var totalEmployees = await employees.CountAsync();
+
+            // Calculate total pages
+            var totalPages = (int)Math.Ceiling((double)totalEmployees / pageSize);
+
+            // Get the employees for the current page
+            var paginatedEmployees = await employees
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
             // Populate dropdown for employees
             ViewBag.EmployeesId = new SelectList(await _context.Employees.ToListAsync(), "Id", "FullName", EmployeesId);
 
-            // Return the filtered employees to the view
-            return View(await employees.ToListAsync());
+            // Pass pagination info to the view
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewData["SearchString"] = searchString; // Maintain the search string
+            ViewData["EmployeesId"] = EmployeesId; // Maintain the employee ID
+
+            // Return the filtered and ordered employees to the view
+            return View(paginatedEmployees);
         }
+
 
 
 

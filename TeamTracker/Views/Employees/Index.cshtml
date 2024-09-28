@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="row g-2 ">
+<div class="row g-5 ">
     <div class="col-12 col-md-4 shadow-lg sideNav">
         <!-- Search Form -->
         <form asp-action="Index" asp-controller="Employees">
@@ -76,6 +76,18 @@
                 </div>
             }
         </div>
+        <!-- Pagination Links -->
+        <div class="pagination">
+            @if (ViewBag.TotalPages > 1)
+            {
+                for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <a href="@Url.Action("Index", new { page = i, searchString = ViewData["SearchString"], EmployeesId = ViewData["EmployeesId"] })"
+                       class="@(ViewBag.CurrentPage == i ? "active" : "")">@i</a>
+                }
+            }
+        </div>
+
     </div>
 </div>
 <script src="~/js/employeeSearch.js"></script>
@@ -83,17 +95,7 @@
 @section Scripts {
    
     <script>
-       @* function searchEmployees() {
-            const input = document.getElementById('employeeSearch');
-            const filter = input.value.toLowerCase();
-            const employeeCards = document.querySelectorAll('.card'); // Get all employee cards
-
-            employeeCards.forEach(card => {
-                const name = card.querySelector('.card-text strong').innerText.toLowerCase(); // Get name from card
-                card.style.display = name.includes(filter) ? "" : "none"; // Show or hide card based on the filter
-            });
-        }*@
-                function searchEmployees() {
+       function searchEmployees() {
         const input = document.getElementById('employeeSearch');
         const filter = input.value.toLowerCase();
         const table = document.getElementById("employeeTable");
