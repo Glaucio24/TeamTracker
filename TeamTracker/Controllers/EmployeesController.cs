@@ -29,77 +29,32 @@ namespace TeamTracker.Controllers
 
         // GET: Employees
         [Authorize]
-        public async Task<IActionResult> Index(int employeeId)
+        public async Task<IActionResult> Index(int? EmployeesId, string searchString)
         {
-            // Initialize the employee list
-            var employees = new List<Employee>();
+            // Initialize the employee query
+            var employees = _context.Employees.AsQueryable();
 
-            // If no specific employeeId is selected, return all employees
-            if (employeeId == 0)
-            {
-                employees = await _context.Employees
-                    .Include(e => e.Departments)
-                    .Include(e => e.Locations)
-                    .OrderBy(e => e.LastName)
-                    .ThenBy(e => e.FirstName)
-                    .ToListAsync();
-            }
-            else
-            {
-                // Filter by employeeId
-                employees = await _context.Employees
-                    .Include(e => e.Departments)
-                    .Include(e => e.Locations)
-                    .Where(e => e.Id == employeeId)
-                    .OrderBy(e => e.LastName)
-                    .ThenBy(e => e.FirstName)
-                    .ToListAsync();
-            }
-
-            // Get department and location lists for dropdown filters
-            var departments = await _context.Departments.ToListAsync();
-            var locations = await _context.Locations.ToListAsync();
-
-            // Pass the department and location lists to the View using ViewData
-            ViewData["DepartmentId"] = new SelectList(departments, "Id", "Name");
-            ViewData["LocationId"] = new SelectList(locations, "Id", "Name");
-
-            return View(employees);
-        }
-
-
-
-
-
-        public IActionResult SearchEmployees(string searchString, int? departmentId, int? locationId)
-        {
-            // Initialize an empty employee list
-            var employees = _context.Employees
-                .Include(e => e.Departments)
-                .Include(e => e.Locations)
-                .AsQueryable();
-
-            // Filter by search string (if provided)
+            // Handle search by name
             if (!string.IsNullOrEmpty(searchString))
             {
                 employees = employees.Where(e => e.FirstName.ToLower().Contains(searchString.ToLower()) ||
-                                                  e.LastName.ToLower().Contains(searchString.ToLower()));
+                                                 e.LastName.ToLower().Contains(searchString.ToLower()));
             }
 
-            // Filter by department if a departmentId is provided
-            if (departmentId.HasValue && departmentId != 0)
+            // Handle filter by specific employee from the dropdown
+            if (EmployeesId.HasValue && EmployeesId != 0)
             {
-                employees = employees.Where(e => e.Departments.Any(d => d.Id == departmentId));
+                employees = employees.Where(e => e.Id == EmployeesId);
             }
 
-            // Filter by location if a locationId is provided
-            if (locationId.HasValue && locationId != 0)
-            {
-                employees = employees.Where(e => e.Locations.Any(l => l.Id == locationId));
-            }
+            // Populate dropdown for employees
+            ViewBag.EmployeesId = new SelectList(await _context.Employees.ToListAsync(), "Id", "FullName", EmployeesId);
 
-            return View(nameof(Index), employees.ToList());
+            // Return the filtered employees to the view
+            return View(await employees.ToListAsync());
         }
+
+
 
 
 

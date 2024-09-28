@@ -16,84 +16,98 @@
 
 <div class="row g-2 ">
     <div class="col-12 col-md-4 shadow-lg sideNav">
-        <form asp-action="searchEmployees" asp-controller="Employees">
-            <div class="input-group">
-                <input class="form-control" type="search" name="SearchString"
-                       placeholder="Search Term" />
+        <!-- Search Form -->
+        <form asp-action="Index" asp-controller="Employees">
+            <div class="input-group mb-3">
+                
+                <input class="form-control" type="search" name="searchString" placeholder="Search Employee" id="employeeSearch" oninput="searchEmployees()" />               
                 <input type="submit" class="btn btn-outline-primary" value="Search" />
             </div>
         </form>
-        <form asp-action="Index" asp-controller="Employees">
-            <div class="mt-5">
+
+        <!-- Employees Filter -->
+        <form asp-action="Index" method="get">
+            <div class="mt-3">
                 <label class="form-label fw-bold">EMPLOYEES FILTER</label>
-                <select name="EmployeesId" asp-items="@ViewBag.EmployeesId" class="form-control"
-                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
-                    <option>All Employees</option>
+                <select name="EmployeesId" asp-items="ViewBag.EmployeesId" class="form-control" onchange="this.form.submit()">
+                    <option value="0">All Employees</option>
                 </select>
-
-            </div>
-        </form>
-
-        <form asp-action="Index" asp-controller="Departments">
-            <div class="mt-5">
-                <label class="form-label fw-bold">DEPARTMENTS FILTER</label>
-                <select name=DepartmentsId" asp-items="@ViewBag.EmployeesId" class="form-control"
-                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
-                    <option>All Departments</option>
-                </select>
-
-            </div>
-        </form>
-        <form asp-action="Index" asp-controller="Locations">
-            <div class="mt-5">
-                <label class="form-label fw-bold">LOCATIONS FILTER</label>
-                <select name="LocationsId" asp-items="@ViewBag.LocationsId" class="form-control"
-                        onchange="this.form.submit()" onmousedown="if(this.options.length>8){this.size=8;}" onblur="this.size=0;">
-                    <option>All Locations</option>
-                </select>
-
             </div>
         </form>
     </div>
 
     <div class="col-12 col-md-8 ">
         <div class="row row-cols-1 g-3 shadow-lg">
-        @foreach (var employee in Model)
-        {
-            <div class="col">
+            @foreach (var employee in Model)
+            {
+                <div class="col">
                     <div class="card mb-3 rounded-pill navShadow ">
-                    <div class="row g-0">
-                        <div class="col-md-4 square-img-container">
-                            <img src='@ImageService.ConvertByteArrayToFile(employee.ImageData!, employee.ImageType!)' class="square-img rounded-start">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <p class="card-text">
-                                    <strong>Name: </strong>@Html.DisplayFor(modelItem => employee.FullName)
-                                </p>
-                                <p class="card-text">
-                                    <strong>Email:</strong> @Html.DisplayFor(modelItem => employee.Email)
-                                </p>
-                                <p class="card-text">
-                                    <strong>Phone Number:</strong> @Html.DisplayFor(modelItem => employee.PhoneNumber)
-                                </p>
-                                <p class="card-text">
-                                    <strong>Hired Date:</strong> @Html.DisplayFor(modelItem => employee.HireDate)
-                                </p>
-                                <p class="card-text">
-                                    <strong>Employment Status:</strong> @Html.DisplayFor(modelItem => employee.Status)
-                                </p>
-                              
-                                <div class="fs-2 mt-4">                       
-                                    <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@employee.Id"><i class="bi bi-pencil-fill"></i></a>
-                                    <a class="me-3 editIcons" asp-action="#"><i class="bi bi-envelope-fill "></i></a>
-                                    <a class="me-3 editIcons text-danger" asp-action="Delete" asp-route-id="@employee.Id"><i class="bi bi-trash-fill"></i></a>                                                                      
+                        <div class="row g-0">
+                            <div class="col-md-4 square-img-container">
+                                <img src='@ImageService.ConvertByteArrayToFile(employee.ImageData!, employee.ImageType!)' class="square-img rounded-start">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        <strong>Name: </strong>@Html.DisplayFor(modelItem => employee.FullName)
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Email:</strong> @Html.DisplayFor(modelItem => employee.Email)
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Phone Number:</strong> @Html.DisplayFor(modelItem => employee.PhoneNumber)
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Hired Date:</strong> @Html.DisplayFor(modelItem => employee.HireDate)
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Employment Status:</strong> @Html.DisplayFor(modelItem => employee.Status)
+                                    </p>
+
+                                    <div class="fs-2 mt-4">
+                                        <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@employee.Id"><i class="bi bi-pencil-fill"></i></a>
+                                        <a class="me-3 editIcons" asp-action="#"><i class="bi bi-envelope-fill "></i></a>
+                                        <a class="me-3 editIcons text-danger" asp-action="Delete" asp-route-id="@employee.Id"><i class="bi bi-trash-fill"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div> 
+</div>
+<script src="~/js/employeeSearch.js"></script>
+<!--Scripts to handle dynamic search-->
+@section Scripts {
+   
+    <script>
+       @* function searchEmployees() {
+            const input = document.getElementById('employeeSearch');
+            const filter = input.value.toLowerCase();
+            const employeeCards = document.querySelectorAll('.card'); // Get all employee cards
+
+            employeeCards.forEach(card => {
+                const name = card.querySelector('.card-text strong').innerText.toLowerCase(); // Get name from card
+                card.style.display = name.includes(filter) ? "" : "none"; // Show or hide card based on the filter
+            });
+        }*@
+                function searchEmployees() {
+        const input = document.getElementById('employeeSearch');
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("employeeTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            const nameCell = cells[1]; // Assuming the name is in the second column
+
+            if (nameCell) {
+                const txtValue = nameCell.textContent || nameCell.innerText;
+                rows[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+            }
+        }
+        }
+    </script>
+}

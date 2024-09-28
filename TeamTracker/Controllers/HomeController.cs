@@ -18,6 +18,13 @@ namespace TeamTracker.Controllers
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+
+
+        public IActionResult Statistics()
+        {
             var dashboard = new Dashboard();
 
             // Fetch departments with their related employees
@@ -57,13 +64,6 @@ namespace TeamTracker.Controllers
                 }).ToList());
 
             return View(dashboard);
-        }
-
-
-
-        public IActionResult Statistics()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
