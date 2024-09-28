@@ -243,3 +243,7 @@ main {
             color: white;
         }
 
+.dh-button{
+    height: 100%;
+    width: 100%;
+}

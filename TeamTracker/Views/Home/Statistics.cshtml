@@ -1,13 +1,46 @@
-﻿@model TeamTracker.ModelView.Dashboard
+﻿@using Microsoft.AspNetCore.Identity
+@model TeamTracker.ModelView.Dashboard
+@inject SignInManager<AppUser> SignInManager
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<main class="content" id="mainHero">
-    <section class="container h-100">
-        <div class="row">
+<main class="content" >
+   
+    <div class="col-12 col-md-4">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="container justify-content-center">
+                <div class="row justify-content-between">
+                    <div class="col-12 col-md-3 mb-2 text-center">
+                        <a class="btn btn-primary btn-custom" asp-area="" asp-controller="Employees" asp-action="Index">
+                            <img src="~/Img/employees.jpg" alt="Employees" class="dh-button" />
+                        </a>
+                        <div>Employees</div>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2 text-center">
+                        <a class="btn btn-secondary btn-custom" asp-area="" asp-controller="Departments" asp-action="Index">
+                            <img src="~/Img/Deepartment.jpg" alt="Departments" class="dh-button" />
+                        </a>
+                        <div>Departments</div>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2 text-center">
+                        <a class="btn btn-success btn-custom" asp-area="" asp-controller="Locations" asp-action="Index">
+                            <img src="~/Img/Location.jpg" alt="Locations" class="dh-button" />
+                        </a>
+                        <div>Locations</div>
+                    </div>
+                </div>
+            </div>
 
+
+        }
+    </div>
+    <div class=" shadow-lg sideNav">
+    <section class="container h-100">        
+        <div class="row">
+           
             <!-- Total Employees -->
             <div class="col-md-4">
                 <div class="text-center sideNav navShadow">
@@ -239,4 +272,5 @@
             });
         }
     </script>
+    </div>
 </main>
