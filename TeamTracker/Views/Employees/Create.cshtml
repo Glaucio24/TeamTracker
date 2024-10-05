@@ -44,9 +44,10 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Status" class="control-label"></label>
-                        <textarea asp-for="Status" class="form-control" rows="3"></textarea>
+                        <select asp-for="Status" class="form-control" asp-items="ViewBag.StatusList"></select>
                         <span asp-validation-for="Status" class="text-danger"></span>
                     </div>
+
 
                     <div class="col-12 col-lg-6 mt-3">
                         <label asp-for="Locations" class="control-label"></label>
@@ -79,14 +80,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-
-
-
-<!--Add option to view next page in case of a lot oof empployees
-    departement specification in the card and fix the moodel as well
-    role and access crud
-    figure out nav bar on te left side
-    Add grid with pictures on locations
-    
--->

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.DependencyResolver;
 using TeamTracker.Data;
+using TeamTracker.Enums;
 using TeamTracker.Models;
 using TeamTracker.Services.Interfaces;
 
@@ -31,9 +32,11 @@ namespace TeamTracker.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int? EmployeesId, string searchString, int page = 1, int pageSize = 3)
         {
-            // Initialize the employee query
-            //var employees = _context.Employees.AsQueryable();
-            var employees = _context.Employees.Include(e => e.Departments).ThenInclude(l => l.Locations).AsQueryable();
+            // Initialize the employee query to properly load Depts and locations          
+            var employees = _context.Employees
+             .Include(e => e.Departments)
+              .Include(e => e.Locations)  
+              .AsQueryable();
 
             // Handle search by name
             if (!string.IsNullOrEmpty(searchString))
@@ -99,6 +102,9 @@ namespace TeamTracker.Controllers
         public IActionResult Create()
         {
             string AppUserId = _userManager.GetUserId(User);
+
+             // Create a SelectList for the EmploymentStatus enum
+             ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmploymentStatus)));                        
 
             // Populate ViewBag with employees
             ViewBag.LocationList = new SelectList(_context.Locations, "Id", "Name");
@@ -193,6 +199,10 @@ namespace TeamTracker.Controllers
             // Populate ViewBag for locations and departments
             ViewBag.LocationList = new SelectList(_context.Locations, "Id", "Name", employee.Locations.Select(l => l.Id));
             ViewBag.DepartmentList = new SelectList(_context.Departments, "Id", "Name", employee.Departments.Select(d => d.Id));
+
+            // Create a SelectList for the EmploymentStatus enum and set the current value as selected
+            ViewBag.StatusList = new SelectList(Enum.GetValues(typeof(EmploymentStatus)), employee.Status);
+
 
             return View(employee);
         }
