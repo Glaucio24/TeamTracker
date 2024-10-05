@@ -32,7 +32,8 @@ namespace TeamTracker.Controllers
         public async Task<IActionResult> Index(int? EmployeesId, string searchString, int page = 1, int pageSize = 3)
         {
             // Initialize the employee query
-            var employees = _context.Employees.AsQueryable();
+            //var employees = _context.Employees.AsQueryable();
+            var employees = _context.Employees.Include(e => e.Departments).ThenInclude(l => l.Locations).AsQueryable();
 
             // Handle search by name
             if (!string.IsNullOrEmpty(searchString))
@@ -74,6 +75,7 @@ namespace TeamTracker.Controllers
             // Return the filtered and ordered employees to the view
             return View(paginatedEmployees);
         }
+
 
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)

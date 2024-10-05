@@ -37,6 +37,8 @@ namespace TeamTracker.Data
                 .WithMany(l => l.Departments)
                 .UsingEntity(j => j.ToTable("DepartmentLocations"));
 
+
+
         }
     }
 }

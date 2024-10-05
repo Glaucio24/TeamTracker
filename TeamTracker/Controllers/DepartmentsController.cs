@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TeamTracker.Data;
 using TeamTracker.Models;
+
 
 namespace TeamTracker.Controllers
 {
@@ -22,7 +24,11 @@ namespace TeamTracker.Controllers
         // GET: Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departments.ToListAsync());
+            var departments = await _context.Departments
+                .Include(d => d.Locations) // Include locations if you want to display them
+                .ToListAsync();
+
+            return View(departments);
         }
 
         // GET: Departments/Details/5
@@ -44,17 +50,20 @@ namespace TeamTracker.Controllers
         }
 
         // GET: Departments/Create
-        public IActionResult Create()
+        public Task<IActionResult> Create()
         {
-            return View();
+
+            return Task.FromResult<IActionResult>(View());
+
         }
 
+
+
         // POST: Departments/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Department department)
+        public async Task<IActionResult> Create([Bind("Id,Name,")] Department department)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +71,10 @@ namespace TeamTracker.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // If ModelState is not valid, it will return the same view with the errors
             return View(department);
+
         }
 
         // GET: Departments/Edit/5

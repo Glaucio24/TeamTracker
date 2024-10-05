@@ -11,12 +11,52 @@
         <a class="btn btn-primary rounded-pill" asp-action="Create">Create New</a>
     </div>
 </div>
+<div class="container">
+    <div class="row g-3 justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="row g-4">
+                @foreach (var department in Model)
+                {
+                    <div class="col-12 col-md-6">
+                        <!-- Adjusted to take more space -->
+                        <div class="card mb-3 rounded-pill" style="min-height: 250px;">
+                            <!-- Set a minimum height for larger appearance -->
+                            <div class="row g-0">
+                                <div class="col-md-4 square-img-container rounded">
+                                    <img src="/img/TT.png" class="square-img rounded-start" alt="TeamTracker Img" style="width: 100%; height: 100%;"> <!-- Ensure the image takes full width of the card -->
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <span class="fw-bold heroTitle2 me-2">@Html.DisplayFor(modelItem => department.Name)</span>
+                                        <div class="card-text">
+                                            <span class="fw-bold me-2">Details:</span>@Html.DisplayFor(modelItem => department.Name)
+                                        </div>
+
+                                        <div class="fs-2 mt-5 ">
+                                            <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@department.Id"><i class="bi bi-pencil-fill "></i></a>
+
+                                            <a class="me-3 editIcons" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash-fill text-danger "></i></a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*
 <div class="row g-2 ">
     <div class="col-12 col-md-8 ">
-        <div class="row row-cols-1 g-3">
+        <div class="row  g-3">
             @foreach (var department in Model)
             {
-                <div class="col">
+                <div class="col-6">
                     <div class="card mb-3 rounded-pill">
                         <div class="row g-0">
                             <div class="col-md-4 square-img-container">
@@ -44,4 +84,4 @@
         </div>
     </div>
 
-</div>
+</div>*@

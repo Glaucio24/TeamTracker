@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TeamTracker.Models.Employee>
+﻿@model IEnumerable<TeamTracker.Models.Employee>;
 @using TeamTracker.Services.Interfaces;
 @inject IImageService ImageService;
 
@@ -61,8 +61,34 @@
                                     </p>
                                     <p class="card-text">
                                         <strong>Employment Status:</strong> @Html.DisplayFor(modelItem => employee.Status)
-                                    </p>
+                                    </p>                                 
 
+                                     <p><strong>Departments:</strong>
+                                        @foreach (var department in employee.Departments)
+                                        {
+                                            <span>@department.Name</span>
+                                        }
+                                    </p>
+                                    <p>
+                                        <strong>Locations:</strong>
+                                        @foreach (var location in employee.Departments.SelectMany(d => d.Locations))
+                                        {
+                                            <span>@location.Name</span>
+                                        }
+                                    </p> <p>
+                                        <strong>Departments:</strong>
+                                        @foreach (var department in employee.Departments)
+                                        {
+                                            <span>@department.Name</span>
+                                        }
+                                    </p>
+                                    <p>
+                                        <strong>Locations:</strong>
+                                        @foreach (var location in employee.Departments.SelectMany(d => d.Locations))
+                                        {
+                                            <span>@location.Name</span>
+                                        }
+                                    </p>
                                     <div class="fs-2 mt-4">
                                         <a class="me-3 editIcons" asp-action="Edit" asp-route-id="@employee.Id"><i class="bi bi-pencil-fill"></i></a>
                                         <a class="me-3 editIcons" asp-action="#"><i class="bi bi-envelope-fill "></i></a>
