@@ -12,10 +12,12 @@ namespace TeamTracker.Data
             : base(options)
         {
         }
+        public DbSet<SentEmail> SentEmails { get; set; }
+        public DbSet<ReceivedEmail> ReceivedEmails { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Department> Departments { get; set; }
-
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Call the base OnModelCreating to apply Identity configurations

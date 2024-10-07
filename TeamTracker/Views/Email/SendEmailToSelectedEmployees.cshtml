@@ -1,0 +1,29 @@
+﻿@model IEnumerable<TeamTracker.Models.Employee>
+
+@{
+    ViewData["Title"] = "Send Email to Selected Employees";
+}
+
+<h1>Send Email to Selected Employees</h1>
+
+<form asp-controller="Email" asp-action="SendEmailToSelectedEmployees" method="post">
+    <div>
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" required />
+    </div>
+    <div>
+        <label for="message">Message:</label>
+        <textarea name="message" required></textarea>
+    </div>
+    <div>
+        <h3>Select Employees:</h3>
+        @foreach (var employee in ViewBag.Employees)
+        {
+            <div>
+                <input type="checkbox" name="employeeIds" value="@employee.Id" />
+                <label>@employee.FirstName @employee.LastName</label>
+            </div>
+        }
+    </div>
+    <button type="submit">Send Email to Selected Employees</button>
+</form>

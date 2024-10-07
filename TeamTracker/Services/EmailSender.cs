@@ -8,7 +8,7 @@ namespace TeamTracker.Services;
 public class EmailSender : IEmailSender
 {
     private readonly ILogger _logger;
-      
+
     public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
                        ILogger<EmailSender> logger)
     {
@@ -39,7 +39,7 @@ public class EmailSender : IEmailSender
         };
         msg.AddTo(new EmailAddress(toEmail));
 
-      
+
         msg.SetClickTracking(false, false);
         var response = await client.SendEmailAsync(msg);
         _logger.LogInformation(response.IsSuccessStatusCode
@@ -47,3 +47,4 @@ public class EmailSender : IEmailSender
                                : $"Failure Email to {toEmail}");
     }
 }
+

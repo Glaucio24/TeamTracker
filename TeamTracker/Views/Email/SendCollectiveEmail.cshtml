@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Send Collective Email";
+}
+
+<h1>Send Collective Email</h1>
+
+<form asp-controller="Email" asp-action="SendCollectiveEmail" method="post">
+    <div>
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" required />
+    </div>
+    <div>
+        <label for="message">Message:</label>
+        <textarea name="message" required></textarea>
+    </div>
+    <button type="submit">Send Email to All Employees</button>
+</form>
