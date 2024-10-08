@@ -13,7 +13,6 @@ namespace TeamTracker.Data
         {
         }
         public DbSet<SentEmail> SentEmails { get; set; }
-        public DbSet<ReceivedEmail> ReceivedEmails { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Department> Departments { get; set; }

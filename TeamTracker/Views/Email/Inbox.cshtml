@@ -1,0 +1,24 @@
+﻿@model TeamTracker.ViewModel.InboxView
+
+<h2>Inbox</h2>
+
+<h3>Sent Emails</h3>
+<table>
+    <thead>
+        <tr>
+            <th>To</th>
+            <th>Subject</th>
+            <th>Sent Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var email in Model.SentEmails)
+        {
+            <tr>
+                <td>@email.RecipientEmail</td>
+                <td>@email.Subject</td>
+                <td>@email.SentDate.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>

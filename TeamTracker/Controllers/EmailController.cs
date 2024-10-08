@@ -5,6 +5,8 @@ using TeamTracker.Models;
 using TeamTracker.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using TeamTracker.ViewModel;  
+
 
 namespace TeamTracker.Controllers
 {
@@ -149,5 +151,18 @@ namespace TeamTracker.Controllers
             ViewBag.Employees = employees;
             return View();
         }
+        //view to display both sent and received emails
+        public IActionResult Inbox()
+        {
+            var sentEmails = _context.SentEmails.ToList(); // Fetch sent emails
+
+            var inboxViewModel = new InboxView
+            {
+                SentEmails = sentEmails,
+            };
+
+            return View(inboxViewModel);
+        }
+
     }
 }
