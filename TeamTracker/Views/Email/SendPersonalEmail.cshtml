@@ -2,22 +2,40 @@
     ViewData["Title"] = "Send Personal Email";
 }
 
-<h2>Send Personal Email</h2>
+<h2 class="text-center mt-4">Send Personal Email</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <strong>Success!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
-<form asp-action="SendPersonalEmail" asp-controller="Email" method="post">
-    <input type="hidden" name="toEmail" value="@ViewBag.ToEmail" />
-    <div class="mb-3">
-        <label for="subject" class="form-label">Subject</label>
-        <input type="text" class="form-control" id="subject" name="subject" required />
+<div class="container mt-5">
+    <div class=" p-3 border border-2 shadow-sm shadow-lg sideNav">
+        <div class="card-body p-4 ">
+            <form asp-action="SendPersonalEmail" asp-controller="Email" method="post">
+                <input type="hidden" name="toEmail" value="@ViewBag.ToEmail" />
+
+                <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Email Subject" required />
+                    <label for="subject">Subject</label>
+                </div>
+
+                <div class="form-floating mb-4">
+                    <textarea class="form-control" id="message" name="message" placeholder="Your message" style="height: 200px" required></textarea>
+                    <label for="message">Message</label>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Send Email</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="message" class="form-label">Message</label>
-        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Send Email</button>
-</form>
+</div>
+
+<a asp-action="Index" asp-controller="Employees">
+    <img src="~/img/button.jpg" alt="" style="width:40px;height:40px; border-radius:50%;" />
+</a>

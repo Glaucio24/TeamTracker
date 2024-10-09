@@ -1,24 +1,51 @@
 ﻿@model TeamTracker.ViewModel.InboxView
 
-<h2>Inbox</h2>
+@{
+    ViewData["Title"] = "Inbox";
+}
 
-<h3>Sent Emails</h3>
-<table>
-    <thead>
-        <tr>
-            <th>To</th>
-            <th>Subject</th>
-            <th>Sent Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var email in Model.SentEmails)
-        {
-            <tr>
-                <td>@email.RecipientEmail</td>
-                <td>@email.Subject</td>
-                <td>@email.SentDate.ToString("g")</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container mt-5">
+    <h2 class="mb-4">Inbox</h2>
+
+    <h3>Sent Emails</h3>
+    <div class="table-responsive p-3 shadow-lg sideNav">
+        <table class=" table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>To</th>
+                    <th>Subject</th>
+                    <th>Body</th>
+                    <th>Sent Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.SentEmails != null && Model.SentEmails.Count > 0)
+                {
+                    foreach (var email in Model.SentEmails)
+                    {
+                                <tr>
+                                    <td>@email.RecipientEmail</td>
+                                    <td>@email.Subject</td>
+                                    <td>@Html.DisplayFor(m => email.Body)</td>
+                                    <td>@email.SentDate.ToString("g")</td>
+                                </tr>
+                    }
+                }
+                else
+                {
+                        <tr>
+                            <td colspan="4" class="text-center">No sent emails found.</td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<a asp-action="Statistics" asp-controller="Home">
+    <img src="~/img/button.jpg" alt="" style="width:40px;height:40px; border-radius:50%;" />
+</a>
+
+@section Scripts {
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+}
