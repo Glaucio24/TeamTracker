@@ -359,31 +359,6 @@ namespace TeamTracker.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("TeamTracker.Models.ReceivedEmail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ReceivedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SenderEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ReceivedEmails");
-                });
-
             modelBuilder.Entity("TeamTracker.Models.SentEmail", b =>
                 {
                     b.Property<int>("Id")

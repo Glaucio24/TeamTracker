@@ -12,8 +12,8 @@ using TeamTracker.Data;
 namespace TeamTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240921020539_AddIdentityTables")]
-    partial class AddIdentityTables
+    [Migration("20241010035421_AZ")]
+    partial class AZ
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -317,6 +317,9 @@ namespace TeamTracker.Migrations
                     b.Property<byte[]>("ImageData")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ImageType")
                         .HasColumnType("nvarchar(max)");
 
@@ -357,6 +360,31 @@ namespace TeamTracker.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("TeamTracker.Models.SentEmail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SentEmails");
                 });
 
             modelBuilder.Entity("DepartmentEmployee", b =>
