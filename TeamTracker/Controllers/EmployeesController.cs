@@ -29,7 +29,7 @@ namespace TeamTracker.Controllers
         }
 
         // GET: Employees
-        [Authorize]
+       
         public async Task<IActionResult> Index(int? EmployeesId, string searchString, int page = 1, int pageSize = 3)
         {
             // Initialize the employee query to properly load Depts and locations          

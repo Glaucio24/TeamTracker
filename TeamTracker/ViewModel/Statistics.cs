@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Humanizer;
+﻿
 
 namespace TeamTracker.ModelView
 {
-    public class Dashboard
+    public class Statistics
     {
         // Properties to include Total 
         public int TotalEmployees { get; set; }

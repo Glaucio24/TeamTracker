@@ -1,0 +1,283 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model TeamTracker.ModelView.Statistics
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = "Dashboard";  
+}
+
+<main class="content">
+
+    <div class="col-12 col-md-4">
+
+
+        <div class="container justify-content-center">
+            <div class="row justify-content-between">
+                <div class="col-12 col-md-3 mx-2 text-center">
+                    <a class="btn btn-primary btn-custom" asp-area="" asp-controller="Employees" asp-action="Index">
+                        <img src="~/Img/business-people-group.png" alt="Employees" class="dh-button" />
+                    </a>
+                    <div>Employees</div>
+                </div>
+                <div class="col-12 col-md-3 mb-2 text-center">
+                    <a class="btn btn-warning btn-custom" asp-area="" asp-controller="Departments" asp-action="Index">
+                        <img src="~/Img/office.png" alt="Departments" class="dh-button" />
+                    </a>
+                    <div>Departments</div>
+                </div>
+                <div class="col-12 col-md-3 mb-2 text-center">
+                    <a class="btn btn-danger btn-custom" asp-area="" asp-controller="Locations" asp-action="Index">
+                        <img src="~/Img/mobile-app-location-digital-art.png" alt="Locations" class="dh-button" />
+                    </a>
+                    <div>Locations</div>
+                </div>
+                <div class="col-12 col-md-3 mb-2 text-center">
+                    <a class="btn btn-dark btn-custom" asp-area="" asp-controller="Email" asp-action="Inbox">
+                        <img src="~/Img/open-email-envelope.png" alt="Email" class="dh-button" />
+                    </a>
+                    <div>Email</div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <div class=" shadow-lg sideNav">
+        <section class="container h-100">
+            <div class="row">
+
+                <!-- Total Employees -->
+                <div class="col-md-4">
+                    <div class="text-center sideNav navShadow">
+                        <div class="card-header">Total Employees</div>
+                        <div class="card-body">
+
+                            <!-- Doughnut Chart for Total Employees -->
+                            <div class="chart-container" style="position: relative; height: 100px; width: 100px; margin: 0 auto;">
+                                <canvas id="employeesDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Departments -->
+                <div class="col-md-4">
+                    <div class="text-center sideNav navShadow">
+                        <div class="card-header">Total Departments</div>
+                        <div class="card-body">
+
+                            <!-- Doughnut Chart for Total Departments -->
+                            <div class="chart-container" style="position: relative; height: 100px; width: 100px; margin: 0 auto;">
+                                <canvas id="departmentsDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Locations -->
+                <div class="col-md-4">
+                    <div class="text-center sideNav navShadow">
+                        <div class="card-header">Total Locations</div>
+                        <div class="card-body">
+
+                            <!-- Doughnut Chart for Total Locations -->
+                            <div class="chart-container" style="position: relative; height: 100px; width: 100px; margin: 0 auto;">
+                                <canvas id="locationsDoughnutChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Add Chart.js from CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            // Plugin to display text in the center of the doughnut charts
+            Chart.register({
+                id: 'centerTextPlugin',
+                beforeDraw: function (chart) {
+                    if (chart.config.type === 'doughnut') {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+
+                        ctx.restore();
+                        var fontSize = (height / 100).toFixed(2);
+                        ctx.font = fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+
+                        var text = chart.data.datasets[0].data[0], // Display the data value in the center
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }
+            });
+
+            // Doughnut Chart for Total Employees
+            const employeesCtx = document.getElementById('employeesDoughnutChart').getContext('2d');
+            const employeesDoughnutChart = new Chart(employeesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Employees'], // Label for Employees
+                    datasets: [{
+                        data: [@Model.TotalEmployees], // Data for Employees
+                        backgroundColor: ['#36a2eb'],
+                        borderColor: ['#ffffff'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%', // Creates the doughnut hole
+                    plugins: {
+                        legend: {
+                            display: false // Hide the legend
+                        }
+                    }
+                },
+                plugins: ['centerTextPlugin'] // Center text plugin
+            });
+
+            // Doughnut Chart for Total Departments
+            const departmentsCtx = document.getElementById('departmentsDoughnutChart').getContext('2d');
+            const departmentsDoughnutChart = new Chart(departmentsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Departments'], // Label for Departments
+                    datasets: [{
+                        data: [@Model.TotalDepartments], // Data for Departments
+                        backgroundColor: ['#ffcd56'],
+                        borderColor: ['#ffffff'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%', // Creates the doughnut hole
+                    plugins: {
+                        legend: {
+                            display: false // Hide the legend
+                        }
+                    }
+                },
+                plugins: ['centerTextPlugin'] // Center text plugin
+            });
+
+            // Doughnut Chart for Total Locations
+            const locationsCtx = document.getElementById('locationsDoughnutChart').getContext('2d');
+            const locationsDoughnutChart = new Chart(locationsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Locations'], // Label for Locations
+                    datasets: [{
+                        data: [@Model.TotalLocations], // Data for Locations
+                        backgroundColor: ['#ff6384'],
+                        borderColor: ['#ffffff'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%', // Creates the doughnut hole
+                    plugins: {
+                        legend: {
+                            display: false // Hide the legend
+                        }
+                    }
+                },
+                plugins: ['centerTextPlugin'] // Center text plugin
+            });
+        </script>
+
+
+
+        <!-- Chart Section -->
+        <div class="row mt-5">
+            <div class="col-md-6">
+                <h3>Total Employees per Department</h3>
+                <canvas id="employeesByDepartmentChart" width="400" height="200"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h3>Total Employees per Location</h3>
+                <canvas id="employeesByLocationChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <script>
+            window.onload = function () {
+                // Get the data from the model
+                var departmentLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.DepartmentNames));
+                var departmentData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.EmployeesPerDepartment));
+                var locationLabels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.LocationNames));
+                var locationData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.EmployeesPerLocation));
+
+                // Employees per Department Chart
+                var ctxDepartment = document.getElementById('employeesByDepartmentChart').getContext('2d');
+                var employeesByDepartmentChart = new Chart(ctxDepartment, {
+                    type: 'bar',
+                    data: {
+                        labels: departmentLabels,
+                        datasets: [{
+                            label: 'Employees',
+                            data: departmentData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Employees'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Employees per Location Chart
+                var ctxLocation = document.getElementById('employeesByLocationChart').getContext('2d');
+                var employeesByLocationChart = new Chart(ctxLocation, {
+                    type: 'bar',
+                    data: {
+                        labels: locationLabels,
+                        datasets: [{
+                            label: 'Employees',
+                            data: locationData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Employees'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </div>
+</main>
