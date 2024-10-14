@@ -288,7 +288,7 @@ namespace TeamTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("TeamTracker.Models.Employee", b =>
@@ -334,7 +334,7 @@ namespace TeamTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("TeamTracker.Models.Location", b =>
@@ -356,7 +356,7 @@ namespace TeamTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("TeamTracker.Models.SentEmail", b =>
@@ -381,7 +381,7 @@ namespace TeamTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SentEmails");
+                    b.ToTable("SentEmails", (string)null);
                 });
 
             modelBuilder.Entity("DepartmentEmployee", b =>
