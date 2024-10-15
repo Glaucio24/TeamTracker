@@ -13,6 +13,7 @@ using TeamTracker.Enums;
 using TeamTracker.Models;
 using TeamTracker.Services.Interfaces;
 
+
 namespace TeamTracker.Controllers
 {
     public class EmployeesController : Controller
@@ -29,13 +30,13 @@ namespace TeamTracker.Controllers
         }
 
         // GET: Employees
-       
+
         public async Task<IActionResult> Index(int? EmployeesId, string searchString, int page = 1, int pageSize = 3)
         {
             // Initialize the employee query to properly load Depts and locations          
             var employees = _context.Employees
              .Include(e => e.Departments)
-              .Include(e => e.Locations)  
+              .Include(e => e.Locations)
               .AsQueryable();
 
             // Handle search by name
