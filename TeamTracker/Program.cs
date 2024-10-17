@@ -35,9 +35,16 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
-// Add email configuration
+
+// Add email configuration in localhost
 builder.Services.Configure<AuthMessageSenderOptions>(
     builder.Configuration.GetSection("AuthMessageSenderOptions"));
+
+// Add email configuration with Azure App service/Environment Variable
+builder.Services.Configure<AuthMessageSenderOptions>(options =>
+{
+    options.SendGridKey = Environment.GetEnvironmentVariable("SendGridKey");
+});
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
